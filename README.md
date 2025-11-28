@@ -41,8 +41,8 @@ Perhitungan subnetting dilakukan berdasarkan alamat IP dasar **10.81.0.0** denga
 > **Catatan Teknis:** Kelompok **Isildur** menggunakan prefix **/26** (kapasitas 62 host) meskipun kebutuhannya 30 host. Hal ini karena prefix **/27** hanya menyediakan tepat 30 IP Usable. Karena 1 IP harus digunakan untuk Gateway Router, maka total yang dibutuhkan adalah 31 IP, sehingga wajib naik ke /26.
 
 ---
+<img width="5204" height="3204" alt="VLSM MODUL 5 (1)" src="https://github.com/user-attachments/assets/350d3208-54e1-4d6b-9211-cd6734d6726a" />
 
-<img width="5204" height="3204" alt="VLSM MODUL 5" src="https://github.com/user-attachments/assets/2288204d-9724-4ed2-975b-548dd404167d" />
 
 <img width="5204" height="2736" alt="TREE VLSM MODUL 5" src="https://github.com/user-attachments/assets/ecbe270c-b87d-4538-9a8e-ce92ed27a4da" />
 
