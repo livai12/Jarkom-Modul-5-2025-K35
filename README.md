@@ -44,6 +44,7 @@ Perhitungan subnetting dilakukan berdasarkan alamat IP dasar **10.81.0.0** denga
 
 <img width="5204" height="3204" alt="VLSM MODUL 5" src="https://github.com/user-attachments/assets/2288204d-9724-4ed2-975b-548dd404167d" />
 
+<img width="5204" height="2736" alt="TREE VLSM MODUL 5" src="https://github.com/user-attachments/assets/ecbe270c-b87d-4538-9a8e-ce92ed27a4da" />
 
 # Tabel Perencanaan Subnet & Kebutuhan Host
 
