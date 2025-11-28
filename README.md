@@ -1,5 +1,10 @@
 # Jarkom-Modul-5-2025-K35
 
+ Nama | NRP |
+|---|---|
+| Tiara Putri Prasetya | 5027241013 |
+| Naufal Ardhana | 5027241118 |
+
 # Topologi Jaringan
 <img width="1253" height="775" alt="image" src="https://github.com/user-attachments/assets/28c9c837-624b-4985-a56a-2943a74d1faa" />
 
