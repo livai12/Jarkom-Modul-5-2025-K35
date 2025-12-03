@@ -149,6 +149,101 @@ iptables -A INPUT -p tcp --dport 80 -j DROP
 ```
 <img width="740" height="49" alt="image" src="https://github.com/user-attachments/assets/89ef2a4b-1d4c-4091-ae3a-0ad6fba71a87" />
 
+# REVISI NO 5 DAN 6
+## Pembatasan Akses untuk palantir di jam jam tertentu
+Melalu pembatasan firewall di jam tersebut dengan command sebagai berikut
+```
+# Hapus aturan lama
+iptables -F
+
+# (Karena sekarang jam 16:00, otomatis GAK MASUK)
+iptables -A INPUT -p tcp --dport 80 -s 10.81.0.128/25 -m time --timestart 07:00 --timestop 10:00 -j ACCEPT
+iptables -A INPUT -p tcp --dport 80 -s 10.81.0.130 -m time --timestart 07:00 --timestop 10:00 -j ACCEPT
+
+# Blokir sisanya
+iptables -A INPUT -p tcp --dport 80 -j DROP
+```
+dan command berikut untuk pembatasan jam di sesi kedua lebih tepatnya elendil
+```
+# Hapus aturan lama
+iptables -F
+
+iptables -A INPUT -p tcp --dport 80 -s 10.81.1.0/24 -m time --timestart 20:00 --timestop 23:00 -j ACCEPT
+
+# Blokir sisanya
+iptables -A INPUT -p tcp --dport 80 -j DROP
+```
+Testing di node palantir untuk aturan sebagai berikut
+<img width="1466" height="414" alt="image" src="https://github.com/user-attachments/assets/57c072c7-1931-40e0-8a60-5ad0211bd74a" />
+Selanjutnya kita set beberapa time untuk kondisi
+<img width="579" height="140" alt="image" src="https://github.com/user-attachments/assets/4986dcb5-9f63-4763-bcb5-c7ed510a7207" />
+Dan dapat terlihat kita tes melalui firewall di waktu tertentu pada gilgalad dan elendil
+<img width="886" height="195" alt="image" src="https://github.com/user-attachments/assets/58f58bb5-5db5-4f62-af6c-1f4733871426" />
+<img width="848" height="300" alt="image" src="https://github.com/user-attachments/assets/fdf3c7b2-4389-4859-b4b0-e3c06460ca68" />
+
+## Uji Keamanan Palantir memlalui nmap scan port dan pemblokiran IP
+Pertama kita set iptables kedalam palantir
+```
+#!/bin/bash
+# Reset Firewall dulu biar bersih
+iptables -F
+
+# -----------------------------------------------------------------------
+# ATURAN 1: BLOKIR TOTAL (The Bouncer)
+# Cek apakah IP pengirim sudah ada di daftar "BLACKLIST".
+# Jika ada, DROP semua paket (TCP, UDP, ICMP/Ping).
+# --update: Setiap paket baru akan memperpanjang durasi hukuman (60 detik).
+# -----------------------------------------------------------------------
+iptables -A INPUT -m recent --name BLACKLIST --update --seconds 60 -j DROP
+
+# -----------------------------------------------------------------------
+# ATURAN 2: PENCATAT (The Counter)
+# Setiap ada koneksi baru (SYN) ke port TCP manapun, catat IP-nya.
+# Kita pakai daftar terpisah "SCAN_COUNTER" untuk menghitung.
+# -----------------------------------------------------------------------
+iptables -A INPUT -p tcp --syn -m recent --name SCAN_COUNTER --set
+
+# -----------------------------------------------------------------------
+# ATURAN 3: DETEKSI & LOG (The Alarm)
+# Cek apakah di daftar "SCAN_COUNTER" sudah ada >15 hits dalam 20 detik?
+# Jika YA, catat ke LOG sistem.
+# -----------------------------------------------------------------------
+iptables -A INPUT -p tcp --syn -m recent --name SCAN_COUNTER --rcheck --seconds 20 --hitcount 15 -j LOG --log-prefix "PORT_SCAN_DETECTED: " --log-level 4
+
+# -----------------------------------------------------------------------
+# ATURAN 4: EKSEKUSI HUKUMAN (The Judge)
+# Jika >15 hits dalam 20 detik, masukkan IP tersangka ke daftar "BLACKLIST".
+# Mulai detik ini, dia akan kena Aturan No. 1 (Blokir Total).
+# -----------------------------------------------------------------------
+iptables -A INPUT -p tcp --syn -m recent --name SCAN_COUNTER --rcheck --seconds 20 --hitcount 15 -m recent --name BLACKLIST --set -j DROP
+
+# -----------------------------------------------------------------------
+# ATURAN 5: IZINKAN TRAFFIC NORMAL
+# Kalau belum kena limit, izinkan masuk (misal Web Server 80)
+# -----------------------------------------------------------------------
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+# Izinkan Ping normal (sebelum kena blokir)
+iptables -A INPUT -p icmp -j ACCEPT
+
+echo "🔥 JEBAKAN PORT SCAN AKTIF!"
+echo "Ketentuan: > 15 Port / 20 Detik = BANNED 60 Detik"
+```
+
+Kemudian kita dapatkan hasil jebakan, dan kita lakukan scan nmap di elendil, sebelumnya kita lakukan dulu tes ping ke ip elendil agar membuktikan jika awalnya routing berjalan
+<img width="777" height="152" alt="image" src="https://github.com/user-attachments/assets/8be66119-30c4-4a5e-ba35-5d67dff67c53" />
+
+<img width="858" height="484" alt="image" src="https://github.com/user-attachments/assets/96346190-3ffd-4dd1-8757-49cbf99f7112" />
+Yang terakhir karena kita memang memberikan hasil untuk blokir ip apabila kita diserang, kita tidak akan bisa melanjutkannya dan ping dari elendil sudah tidak bisa karena elendil sudah terblacklist sebagai penyerang
+![Uploading image.png…]()
+
+
+
+
+
+
+
+
+
 
 
 
