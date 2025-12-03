@@ -174,12 +174,15 @@ iptables -A INPUT -p tcp --dport 80 -s 10.81.1.0/24 -m time --timestart 20:00 --
 iptables -A INPUT -p tcp --dport 80 -j DROP
 ```
 Testing di node palantir untuk aturan sebagai berikut
+
 <img width="1466" height="414" alt="image" src="https://github.com/user-attachments/assets/57c072c7-1931-40e0-8a60-5ad0211bd74a" />
 
 Selanjutnya kita set beberapa time untuk kondisi
+
 <img width="579" height="140" alt="image" src="https://github.com/user-attachments/assets/4986dcb5-9f63-4763-bcb5-c7ed510a7207" />
 
 Dan dapat terlihat kita tes melalui firewall di waktu tertentu pada gilgalad dan elendil
+
 <img width="886" height="195" alt="image" src="https://github.com/user-attachments/assets/58f58bb5-5db5-4f62-af6c-1f4733871426" />
 <img width="848" height="300" alt="image" src="https://github.com/user-attachments/assets/fdf3c7b2-4389-4859-b4b0-e3c06460ca68" />
 
@@ -232,11 +235,13 @@ echo "Ketentuan: > 15 Port / 20 Detik = BANNED 60 Detik"
 ```
 
 Kemudian kita dapatkan hasil jebakan, dan kita lakukan scan nmap di elendil, sebelumnya kita lakukan dulu tes ping ke ip elendil agar membuktikan jika awalnya routing berjalan
+
 <img width="777" height="152" alt="image" src="https://github.com/user-attachments/assets/8be66119-30c4-4a5e-ba35-5d67dff67c53" />
 
 <img width="858" height="484" alt="image" src="https://github.com/user-attachments/assets/96346190-3ffd-4dd1-8757-49cbf99f7112" />
 
 Yang terakhir karena kita memang memberikan hasil untuk blokir ip apabila kita diserang, kita tidak akan bisa melanjutkannya dan ping dari elendil sudah tidak bisa karena elendil sudah terblacklist sebagai penyerang
+
 <img width="804" height="166" alt="image" src="https://github.com/user-attachments/assets/ce4fc892-85ad-4b3b-b4d8-de15b9cb4983" />
 
 
